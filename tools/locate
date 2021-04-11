@@ -1,0 +1,82 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
+'''
+    locate
+
+Script to find Files and/or Directories.
+'''
+
+
+import os
+import sys
+from threading import Thread
+
+# Try if there is a target.
+# If there is none, we exit,
+# as there is nothing to do.
+try:
+    TARGET = sys.argv[1]
+except IndexError:
+    print('\n[!] No target was given, exiting..')
+    # No Clean Exit
+    sys.exit(1)
+else:
+    print(f'\n[+] Looking for "{TARGET}"..\n')
+
+CURRENT_DIR = os.getcwd()
+DIRS_TO_WALK = [CURRENT_DIR, '/']
+
+
+def walk_paths() -> None:
+    ''' Iterate over Paths
+    '''
+    for to_walk in DIRS_TO_WALK:
+        for root, dirs, files in os.walk(to_walk):
+
+            for elem in files:
+                if elem == TARGET:
+                   # FOUND_FILE.append(root)
+                    yield ('[+] Found File in:', root)
+
+            for elem in dirs:
+                if elem == TARGET:
+                    # FOUND_DIR.append(root)
+                    yield ('[+] Found Directory in: ', root)
+
+def output_results() -> None:
+    ''' Present Results
+    '''
+    result_gen = walk_paths()
+    try:
+        for result in next(result_gen):
+            if not result:
+                print('[!] Nothing found..')
+                sys.exit(0)
+            else:
+                print(result)
+    except StopIteration:
+        print('[!] No results..')
+
+def main() -> None:
+    ''' Main of locate
+    '''
+    # Define Threads
+    walk_thread = Thread(target=walk_paths)
+    walk_thread.daemon = True
+
+    out_thread = Thread(target=output_results)
+    out_thread.daemon= True
+
+    # Start Threads
+    walk_thread.start()
+    walk_thread.join()
+    out_thread.start()
+    out_thread.join()
+
+
+if __name__ == '__main__':
+
+    main()
+    # Clean Exit
+    sys.exit(0)
