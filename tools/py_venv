@@ -1,0 +1,24 @@
+#!/bin/bash
+#
+# Script to handle Python
+# Development Environments.
+#
+# Virtual Environment is 
+# always installed inside
+# "venv".
+
+HERE=$(pwd)
+ARG=("$@")
+
+echo $ARG
+if [ ! -e "venv" ]; then
+	mkdir $HERE/venv;
+	python3 -m venv venv;
+fi
+
+if [ ! -e "setup.py" ]; then 
+	touch setup.py;
+fi
+
+source $HERE/venv/bin/activate;
+
