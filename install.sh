@@ -10,7 +10,9 @@
 #
 # Sudo is used here, don't enter
 # a password if you have not checked
-# this script before!
+# this script before or you when you
+# are wondering right now why you
+# are having this script.
 
 # Define Variables
 # FOLDER:  String of path to scripts to install.
